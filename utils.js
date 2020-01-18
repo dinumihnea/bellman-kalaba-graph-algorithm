@@ -1,15 +1,39 @@
 /**
+ * Gets the longest value (as string) from matrix
+ * @param matrix
+ * @param columnCount
+ */
+function getMaxPaddingLength(matrix, columnCount) {
+  let paddingLength = 1;
+  for (let i = 0; i < matrix.length; i++) {
+    for (let j = 0; j < matrix[i].length; j++) {
+      let currentValue = matrix[i][j];
+      if (currentValue !== Infinity && currentValue.toString().length > paddingLength)
+        paddingLength = currentValue.toString().length;
+    }
+  }
+  return paddingLength;
+}
+
+/**
  * Displays the matrix in row and columns
  * @param matrix - {Array of Arrays}
  * @param columnCount - the number of columns to be parsed (for non square matrix),
  * by default a columnCount for square matrix will be taken row=column
  */
 export function display(matrix, columnCount = matrix.length) {
+  let paddingLength = getMaxPaddingLength(matrix, columnCount);
+  let gaps = " ";
+  for (let i = 0; i < paddingLength; i++) {
+    gaps += " ";
+  }
+
   for (let i = 0; i < matrix.length; i++) {
     let row = "";
     for (let j = 0; j < columnCount; j++) {
       let value = matrix[i][j] === Infinity ? "-" : matrix[i][j];
-      row += " " + value;
+      value = (gaps + value).slice(-paddingLength);
+      row += value + " ";
     }
     console.log(row);
     row = ""
