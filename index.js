@@ -1,5 +1,5 @@
-import * as utils from "./utils";
-import nodes from "./input";
+import * as utils from './utils';
+import nodes from './input';
 
 const size = utils.getMax(nodes);
 const count = size + 1;
@@ -41,7 +41,6 @@ const findTheSmallestSum = (matrix, v, i) => {
   return min;
 };
 
-
 // Step 1
 for (let i = 0; i < matrix.length; i++) {
   for (let j = 0; j < count; j++) {
@@ -62,7 +61,7 @@ for (let i = 0; i < matrix.length; i++) {
   }
 }
 
-console.log("After Step 1");
+console.log('After Step 1');
 utils.display(matrix);
 
 // Step 2
@@ -73,7 +72,7 @@ for (let i = 0; i < count; i++) {
   matrix[v0Index][i] = matrix[i][count - 1];
 }
 
-console.log("After Step 2");
+console.log('After Step 2');
 utils.display(matrix, count);
 
 // Step 3
@@ -88,7 +87,37 @@ do {
   isDone = utils.compareArrays(prevArray, matrix[matrix.length - 1]);
 } while (!isDone);
 
-console.log("After Step 3");
+const result = matrix[matrix.length - 1];
+
+console.log('After Step 3');
 utils.display(matrix, count);
+let res = '';
+
+const stack = [];
+
+stack.push([result[0], 0]);
+
+while (stack.length > 0) {
+  const [roadLength, i] = stack.pop();
+  const arcs = allNodes.filter(node => node[0] === i);
+
+  if (arcs.length === 0) {
+    res += i;
+    break;
+  }
+
+  arcs.forEach((arc, index) => {
+    const weight = arc[2];
+    const neighbour = arc[1];
+
+    if (roadLength - result[neighbour] === weight) {
+      res += i;
+      const neighbourId = result.findIndex(num => num === result[neighbour]);
+      stack.push([result[neighbour], neighbourId]);
+    }
+  });
+}
+
+console.log(res);
 
 console.log(`The shortest path: ${matrix[matrix.length - 1][0]}`);
