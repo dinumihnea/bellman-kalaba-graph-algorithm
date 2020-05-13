@@ -1,47 +1,21 @@
-import * as utils from './utils';
-import nodes from './input';
+import * as utils from "./utils";
+import { findTheSmallestSum, getNode, normalizeNodes } from "./utils";
+import { nodes } from "./input";
 
-const size = utils.getMax(nodes);
+const minNode = utils.getMinNode(nodes);
+const allNodes = minNode === 0 ? nodes : normalizeNodes(nodes, minNode);
+
+// By default algorithm calculates path from the lowest vertex
+// to customize path startVertex should be used
+const startVertex = minNode;
+const endVertex = utils.getMaxDestinationNode(allNodes);
+
+const size = utils.getMax(allNodes);
+const matrix = utils.getDefaultMatrix(size)
 const count = size + 1;
-let matrix = utils.getDefaultMatrix(size);
-let allNodes = Object.values(nodes);
-
-/**
- * Gets a node that matches Base and Target indexes
- * @param i Base index
- * @param j Target index
- * @returns {number[]}
- */
-const getNode = (i, j) => {
-  for (let iterator = 0; iterator < allNodes.length; iterator++) {
-    if (allNodes[iterator][0] === i && allNodes[iterator][1] === j) {
-      return allNodes[iterator];
-    }
-  }
-};
-
-/**
- * Finds the smallest sum result between current (v) and incremental(i) rows
- * @param matrix
- * @param v current matrix row to be summed
- * @param i incremental matrix row to be summed
- * @returns {number} the smallest sum found
- */
-const findTheSmallestSum = (matrix, v, i) => {
-  let temp = [];
-  // Extract sum between V row and i in a tempArray
-  for (let j = 0; j < count; j++) {
-    temp.push(matrix[v][j] + matrix[i][j]);
-  }
-  // Find min in sums
-  let min = temp[0];
-  for (let j = 0; j < temp.length; j++) {
-    if (temp[j] < min) min = temp[j];
-  }
-  return min;
-};
 
 // Step 1
+// Fill matrix with node details
 for (let i = 0; i < matrix.length; i++) {
   for (let j = 0; j < count; j++) {
     // Pot ZERO as value for main diagonal
@@ -50,10 +24,10 @@ for (let i = 0; i < matrix.length; i++) {
       continue;
     }
     // Check node
-    const node = getNode(i, j);
+    const node = getNode(allNodes, i, j);
     if (node) {
       // Fill matrix with node's amount
-      matrix[i][j] = getNode(i, j)[2];
+      matrix[i][j] = getNode(allNodes, i, j)[2];
     } else {
       // Put Infinity otherwise
       matrix[i][j] = Infinity;
@@ -61,63 +35,77 @@ for (let i = 0; i < matrix.length; i++) {
   }
 }
 
-console.log('After Step 1');
-utils.display(matrix);
+console.log("After Step 1");
+console.table(matrix);
 
 // Step 2
-matrix.push(new Array(count));
-const v0Index = matrix.length - 1;
+// Duplicate last column as an additional row, for source of following operations
 for (let i = 0; i < count; i++) {
-  // Append last column as new row
-  matrix[v0Index][i] = matrix[i][count - 1];
+  matrix[matrix.length - 1][i] = matrix[i][count - 1]
 }
-
-console.log('After Step 2');
-utils.display(matrix, count);
+console.log("After Step 2");
+console.table(matrix)
 
 // Step 3
-let isDone = false;
-do {
-  let v = matrix.length - 1;
-  let prevArray = [...matrix[v]];
-  matrix.push(new Array(count));
-  for (let i = 0; i < count; i++) {
-    matrix[matrix.length - 1][i] = findTheSmallestSum(matrix, v, i);
+// Compare and find smallest sum between last matrix row and index row
+for (let i = matrix.length - 1; i < matrix.length; i++) {
+  let row = new Array(count);
+  for (let j = 0; j < count; j++) {
+    row[j] = findTheSmallestSum(matrix, i, j, count);
   }
-  isDone = utils.compareArrays(prevArray, matrix[matrix.length - 1]);
-} while (!isDone);
-
-const result = matrix[matrix.length - 1];
-
-console.log('After Step 3');
-utils.display(matrix, count);
-let res = '';
-
-const stack = [];
-
-stack.push([result[0], 0]);
-
-while (stack.length > 0) {
-  const [roadLength, i] = stack.pop();
-  const arcs = allNodes.filter(node => node[0] === i);
-
-  if (arcs.length === 0) {
-    res += i;
+  matrix.push(row);
+  if (utils.compareArrays(row, matrix[i])) {
     break;
   }
+}
+console.log("After step 3")
+console.table(matrix)
+// Value from matrix[matrix.length - 1][0] represents the shortest path from first to last vertex
+console.log("The shortest path weight is:", matrix[matrix.length - 1][0])
 
-  arcs.forEach((arc, index) => {
-    const weight = arc[2];
-    const neighbour = arc[1];
 
-    if (roadLength - result[neighbour] === weight) {
-      res += i;
-      const neighbourId = result.findIndex(num => num === result[neighbour]);
-      stack.push([result[neighbour], neighbourId]);
+// TODO refactoring: extract in different functions
+// Step 4
+// Find Routes in the result matrix
+const routes = [];
+const routesWeights = matrix[matrix.length - 1];
+
+for (let i = 0; i < routesWeights.length; i++) {
+  const matrixRow = matrix[i];
+
+  for (let j = 1; j <= endVertex; j++) {
+
+    if (routesWeights[i] - matrix[i][j] === routesWeights[j] && matrixRow[j]) {
+      const from = startVertex === 0 ? i : i + 1;
+      const to = startVertex === 0 ? j : j + 1;
+
+      if (from === startVertex) {
+        routes.push([from, to]);
+      } else {
+
+        const previousRoute = routes.filter(value => value[value.length - 1] === from);
+        // Add matched vertex
+        if (previousRoute.length) {
+          previousRoute.forEach(route =>
+            routes[routes.indexOf(route)] = [...route, to]
+          );
+        } else {
+          // Duplicate route if matches
+          const lastRoutes = utils.copyFilteredArray(routes, value => value[value.length - 2] === from);
+          if (lastRoutes.length) {
+            lastRoutes.forEach(route => {
+              route[route.indexOf(from) + 1] = to;
+              routes.push(route)
+            });
+          }
+        }
+      }
     }
-  });
+
+  }
 }
 
-console.log(res);
-
-console.log(`The shortest path: ${matrix[matrix.length - 1][0]}`);
+// Display found routes
+console.log("After step 4")
+console.log("Shortest paths are:")
+console.log(utils.getPaths(routes, "->"))
