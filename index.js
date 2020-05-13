@@ -1,9 +1,8 @@
-import * as utils from "./utils";
-import { findTheSmallestSum, getNode, normalizeNodes } from "./utils";
-import { nodes } from "./input";
+const utils = require("./utils");
+const nodes = require("./input");
 
 const minNode = utils.getMinNode(nodes);
-const allNodes = minNode === 0 ? nodes : normalizeNodes(nodes, minNode);
+const allNodes = minNode === 0 ? nodes : utils.normalizeNodes(nodes, minNode);
 
 // By default algorithm calculates path from the lowest vertex
 // to customize path startVertex should be used
@@ -24,10 +23,10 @@ for (let i = 0; i < matrix.length; i++) {
       continue;
     }
     // Check node
-    const node = getNode(allNodes, i, j);
+    const node = utils.getNode(allNodes, i, j);
     if (node) {
       // Fill matrix with node's amount
-      matrix[i][j] = getNode(allNodes, i, j)[2];
+      matrix[i][j] = utils.getNode(allNodes, i, j)[2];
     } else {
       // Put Infinity otherwise
       matrix[i][j] = Infinity;
@@ -51,7 +50,7 @@ console.table(matrix)
 for (let i = matrix.length - 1; i < matrix.length; i++) {
   let row = new Array(count);
   for (let j = 0; j < count; j++) {
-    row[j] = findTheSmallestSum(matrix, i, j, count);
+    row[j] = utils.findTheSmallestSum(matrix, i, j, count);
   }
   matrix.push(row);
   if (utils.compareArrays(row, matrix[i])) {

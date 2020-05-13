@@ -3,7 +3,7 @@
  * @param nodes - the nodes to be converted
  * @param startIndex - the minimum node value
  */
-export const normalizeNodes = (nodes, startIndex = 1) => {
+exports.normalizeNodes = function (nodes, startIndex = 1) {
   const normalizedNodes = [];
   nodes.forEach((row, index) => {
     normalizedNodes[index] = [
@@ -21,7 +21,7 @@ export const normalizeNodes = (nodes, startIndex = 1) => {
  * @param nodes
  * @returns {number}
  */
-export function getMax(nodes) {
+exports.getMax = function (nodes) {
   let max = 0;
   let allNodes = Object.values(nodes);
   for (let i = 0; i < allNodes.length; i++) {
@@ -34,7 +34,7 @@ export function getMax(nodes) {
 /**
  * Gets a square matrix with empty values based on given rows and cols values
  */
-export function getDefaultMatrix(rows, cols = rows) {
+exports.getDefaultMatrix = function (rows, cols = rows) {
   const matrix = new Array(rows);
   for (let i = 0; i <= rows; i++) {
     matrix[i] = new Array(cols);
@@ -47,7 +47,7 @@ export function getDefaultMatrix(rows, cols = rows) {
  * Compares two arrays by values.
  * @returns {boolean} true if arr1 matches all values from arr2
  */
-export function compareArrays(arr1, arr2) {
+exports.compareArrays = function (arr1, arr2) {
   for (let i = 0; i < arr1.length; i++) {
     if (arr1[i] !== arr2[i]) return false;
   }
@@ -60,7 +60,7 @@ export function compareArrays(arr1, arr2) {
  * @param nodes
  * @returns {number}
  */
-export function getMinNode(nodes) {
+exports.getMinNode = function (nodes) {
   let min = nodes[0][0];
   for (let i = 0; i < nodes.length; i++) {
     if (nodes[i][0] < min) min = nodes[i][0];
@@ -75,7 +75,7 @@ export function getMinNode(nodes) {
  * @param nodes
  * @returns {number}
  */
-export function getMaxDestinationNode(nodes) {
+exports.getMaxDestinationNode = function (nodes) {
   let max = nodes[0][0];
   for (let i = 0; i < nodes.length; i++) {
     if (nodes[i][1] > max) max = nodes[i][1];
@@ -83,11 +83,11 @@ export function getMaxDestinationNode(nodes) {
   return max;
 }
 
-export function copyFilteredArray(array, filter) {
+exports.copyFilteredArray = function (array, filter) {
   return JSON.parse(JSON.stringify(array.filter(filter)));
 }
 
-export function getPaths(routes, separator) {
+exports.getPaths = function (routes, separator) {
   const paths = [];
   for (let i = 0; i < routes.length; i++) {
     let path = routes[i][0];
@@ -108,7 +108,7 @@ export function getPaths(routes, separator) {
  * @param count the amount nodes
  * @returns {number} the smallest sum found
  */
-export function findTheSmallestSum(matrix, v, i, count) {
+exports.findTheSmallestSum = function (matrix, v, i, count) {
   let temp = [];
   // Extract sum between V row and i in a tempArray
   for (let j = 0; j < count; j++) {
@@ -126,7 +126,7 @@ export function findTheSmallestSum(matrix, v, i, count) {
  * Gets a node that matches Base and Target indexes
  * @returns node {number[]}
  */
-export function getNode(nodes, base, target) {
+exports.getNode = function (nodes, base, target) {
   for (let iterator = 0; iterator < nodes.length; iterator++) {
     if (nodes[iterator][0] === base && nodes[iterator][1] === target) {
       return nodes[iterator];

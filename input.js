@@ -7,7 +7,7 @@
 // 1 -> 2 -> 4 -> 5 -> 6 -> 8
 // 1 -> 2 -> 4 -> 8
 // 1 -> 2 -> 4 -> 5 -> 8
-export const nodes = [
+module.exports = [
   [1, 2, 3],
   [1, 3, 7],
   [1, 5, 9],
@@ -32,7 +32,7 @@ export const nodes = [
 // 0 -> 1 -> 3 -> 4 -> 5 -> 7
 // 0 -> 1 -> 3 -> 7
 // 0 -> 1 -> 3 -> 4 -> 7
-/*export const nodes = [
+/*module.exports = [
   [0, 1, 3],
   [0, 2, 7],
   [0, 4, 9],
@@ -53,7 +53,7 @@ export const nodes = [
 
 // Shortest path 9:
 // Path: 1 -> 2 -> 3 -> 4 -> 6
-/*export const nodes = [
+/*module.exports = [
   [1, 2, 2],
   [1, 6, 11],
   [2, 3, 3],
@@ -67,7 +67,7 @@ export const nodes = [
 
 // Shortest path: 9
 // Path: 0 -> 1 -> 2 -> 3 -> 5
-/*export const nodes = [
+/*module.exports = [
   [0, 1, 2],
   [0, 5, 11],
   [1, 2, 3],
@@ -87,7 +87,7 @@ export const nodes = [
 // 1 -> 3 -> 7 -> 8
 // 1 -> 3 -> 5 -> 8
 // 1 -> 5 -> 8
-/*export const nodes = [
+/*module.exports = [
   [1, 2, 6],
   [1, 3, 10],
   [1, 5, 12],

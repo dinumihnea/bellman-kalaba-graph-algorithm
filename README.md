@@ -1,12 +1,10 @@
 # bellman-kalaba-graph-algorithm
-Java Script implementation of Bellman-Kalaba graph algorithm
+Java Script implementation of Bellman-Kalaba graph algorithm with ZERO dependencies
 The Belman-Kalaba algorithm calculates the shortest path from a certain vertex to the end vertex based on the node's weight
 
 `TODO: attach step documentatio`
 
-####*Before run be sure to install all dependencies: `npm install`
-
-#### Application can be run using: `npm run start` command
+#### Application can be run using: `npm run start`  or `node index`
 
 graph can be configured in `input.js` file
 
